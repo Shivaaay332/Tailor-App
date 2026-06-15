@@ -1,0 +1,213 @@
+// ==========================================
+// 1. Database & Generator Configuration
+// ==========================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ==========================================
+// 2. Enums (Fixed Values for the App)
+// ==========================================
+
+enum GarmentType {
+  SHIRT
+  PANT
+  COAT
+  JACKET
+  KURTA
+  PAJAMA
+  BLOUSE
+  LEHENGA
+  SHERWANI
+  CUSTOM
+}
+
+enum OrderStatus {
+  PENDING
+  CUTTING
+  STITCHING
+  READY
+  DELIVERED
+  CANCELLED
+}
+
+enum PaymentMethod {
+  CASH
+  UPI
+  CARD
+  BANK_TRANSFER
+}
+
+// ==========================================
+// 3. Main Entities (Tables)
+// ==========================================
+
+// 1. Users Table
+model User {
+  id           String   @id @default(uuid())
+  name         String
+  email        String   @unique
+  password     String
+  mobile       String?  @unique
+  profileImage String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relations
+  shop          Shop? // Ek user ki ek shop hogi (1-to-1)
+  notifications Notification[]
+}
+
+// 2. Shops Table (Central Entity)
+model Shop {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  shopName  String
+  ownerName String
+  address   String?
+  mobile    String
+  logo      String?
+  gstNumber String? // Optional
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations (Data isolation ke liye har cheez Shop se judi hogi)
+  customers     Customer[]
+  orders        Order[]
+  settings      Settings?
+  notifications Notification[]
+  backupLogs    BackupLog[]
+}
+
+// 3. Customers Table
+model Customer {
+  id           String   @id @default(uuid())
+  shopId       String
+  shop         Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  customerCode String   @unique // Jaise: CUST-001
+  serialNumber Int      @default(autoincrement())
+  name         String
+  mobile       String
+  address      String?
+  notes        String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relations
+  measurements Measurement[]
+  orders       Order[]
+}
+
+// 4. Measurements Table (Dynamic JSON data based on Garment)
+model Measurement {
+  id          String      @id @default(uuid())
+  customerId  String
+  customer    Customer    @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  garmentType GarmentType
+  data        Json // Flexible storage: { "length": 40, "waist": 34, "chest": 38 }
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  // Relations
+  orderItems OrderItem[]
+}
+
+// 5. Orders Table
+model Order {
+  id           String      @id @default(uuid())
+  shopId       String
+  shop         Shop        @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  customerId   String
+  customer     Customer    @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  orderNumber  String      @unique // Jaise: ORD-2023-1001
+  bookingDate  DateTime    @default(now())
+  deliveryDate DateTime
+  status       OrderStatus @default(PENDING)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  // Relations
+  items    OrderItem[]
+  payments Payment[]
+}
+
+// 6. OrderItems Table (Ek order me multiple kapde ho sakte hain)
+model OrderItem {
+  id      String @id @default(uuid())
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  measurementId String?
+  measurement   Measurement? @relation(fields: [measurementId], references: [id])
+
+  garmentType GarmentType
+  quantity    Int         @default(1)
+  price       Float // Silai ka rate (Stitching cost)
+  notes       String? // Jaise: "Collar tight rakhna"
+}
+
+// 7. Payments Table (Transaction History)
+model Payment {
+  id      String @id @default(uuid())
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  totalAmount       Float // Order ka total bill
+  advanceAmount     Float @default(0.0) // Shuru me kitna diya
+  installmentAmount Float @default(0.0) // Aaj kitna pay kar raha hai
+  remainingAmount   Float // Kitna bacha hai
+
+  paymentDate   DateTime      @default(now())
+  paymentMethod PaymentMethod @default(CASH)
+  createdAt     DateTime      @default(now())
+}
+
+// 8. Notifications Table
+model Notification {
+  id     String @id @default(uuid())
+  shopId String
+  shop   Shop   @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  title     String
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+// 9. Settings Table
+model Settings {
+  id     String @id @default(uuid())
+  shopId String @unique
+  shop   Shop   @relation(fields: [shopId], references: [id], onDelete: Cascade)
+
+  currency     String  @default("INR") // Default Mudra
+  language     String  @default("en") // Interface bhasha
+  taxRate      Float   @default(0.0) // GST ya VAT rate percentage
+  invoiceNotes String? // Bill ke neeche likhne wala default text
+  theme        String  @default("LIGHT")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// 10. BackupLogs Table
+model BackupLog {
+  id     String @id @default(uuid())
+  shopId String
+  shop   Shop   @relation(fields: [shopId], references: [id], onDelete: Cascade)
+
+  backupUrl String? // Agar cloud storage (S3) par backup rakha hai
+  status    String // SUCCESS, FAILED, IN_PROGRESS
+  details   String? // Error log ya message
+
+  createdAt DateTime @default(now())
+}

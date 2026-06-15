@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Native app jaisa feel dene ke liye */
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #e5e7eb; /* Halka grey background desktop ke liye */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  
+  /* Text select hone se rokne ke liye (Native apps me text select nahi hota) */
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Ye hamari mobile app ka frame hai */
+#root {
+  max-width: 480px; /* Mobile ki maximum width */
+  margin: 0 auto; /* Desktop par center me lane ke liye */
+  min-height: 100vh;
+  background-color: #ffffff; /* App ka actual background white hoga */
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); /* Halka sa shadow desktop view ke liye */
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Input fields me likhte waqt text select ho sake, isliye usko override kiya */
+input, textarea {
+  -webkit-user-select: auto;
+  user-select: auto;
+}
+
+/* Scrollbar ko mobile native app jaisa hide karna */
+::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
