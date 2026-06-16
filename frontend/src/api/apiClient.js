@@ -1,8 +1,8 @@
 import axios from 'axios';
 import useAuthStore from '../store/authStore';
 
-// Backend ka URL (Aage chal kar isko live URL se replace kar sakte ho)
-const BASE_URL = 'http://localhost:5000/api'; 
+// Backend ka URL - Production ya Local
+const BASE_URL = import.meta.env.VITE_API_URL || 'https://tailor-app-88nn.onrender.com/api';
 
 const apiClient = axios.create({
   baseURL: BASE_URL,

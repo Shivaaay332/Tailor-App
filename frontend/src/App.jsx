@@ -34,8 +34,9 @@ function App() {
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
+        const API_URL = import.meta.env.VITE_API_URL || 'https://tailor-app-88nn.onrender.com';
         const response = await axios.post(
-          'http://localhost:5000/api/auth/refresh', 
+          `${API_URL}/auth/refresh`, 
           {}, 
           { withCredentials: true }
         );
