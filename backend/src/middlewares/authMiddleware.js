@@ -19,8 +19,11 @@ const protect = async (req, res, next) => {
     // Token verify karna
     const decoded = jwt.verify(token, process.env.JWT_SECRET || 'tailor_super_secret_key');
     
-    // User ko dhoondhna aur uski ID set karna (Ye step fail ho raha tha pichli baar)
-    const currentUser = await prisma.user.findUnique({ where: { id: decoded.id } });
+    // User ko dhoondhna aur uski Shop ID set karna (Relation include karein)
+    const currentUser = await prisma.user.findUnique({ 
+      where: { id: decoded.id },
+      include: { shop: true }
+    });
     
     if (!currentUser) {
       return res.status(401).json({ success: false, message: "User exist nahi karta." });
@@ -29,7 +32,7 @@ const protect = async (req, res, next) => {
     // Aage ke controllers ke liye data set karna
     req.user = currentUser;
     req.userId = currentUser.id;
-    req.shopId = currentUser.shopId;
+    req.shopId = currentUser.shop ? currentUser.shop.id : null;
     
     next();
   } catch (error) {
