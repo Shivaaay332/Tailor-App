@@ -6,27 +6,30 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      registerType: 'autoUpdate', // App update hone par automatically naya version aayega
+      registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
       manifest: {
         name: 'Tailor Manager PWA',
         short_name: 'Tailor App',
         description: 'Mobile First Tailor Shop Management System',
-        theme_color: '#ffffff',
-        background_color: '#ffffff',
-        display: 'standalone', // Ye browser URL bar ko chupa dega, bilkul app jaisa feel aayega
+        theme_color: '#0F172A',
+        background_color: '#0F172A',
+        display: 'standalone',
         icons: [
           {
-            src: 'pwa-192x192.png', // Tumhe baad me public folder me ek 192x192 logo daalna hoga
+            src: 'pwa-192x192.png',
             sizes: '192x192',
             type: 'image/png'
           },
           {
-            src: 'pwa-512x512.png', // Ek 512x512 logo
+            src: 'pwa-512x512.png',
             sizes: '512x512',
             type: 'image/png'
           }
         ]
+      },
+      workbox: {
+        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 5MB
       }
     })
   ],

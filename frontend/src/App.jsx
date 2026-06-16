@@ -21,9 +21,9 @@ import CustomerDetail from './pages/CustomerDetail';
 import AddMeasurement from './pages/AddMeasurement';
 import Orders from './pages/Orders';
 import AddOrder from './pages/AddOrder';
-import Payments from './pages/Payments';        // NAYA IMPORT
-import AddPayment from './pages/AddPayment';    // NAYA IMPORT
-import Settings from './pages/Settings';        // NAYA IMPORT
+import Payments from './pages/Payments';
+import AddPayment from './pages/addPayment';
+import Settings from './pages/Settings';
 
 function App() {
   const [isInitializing, setIsInitializing] = useState(true);
@@ -55,15 +55,15 @@ function App() {
 
   if (isInitializing) {
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col justify-center items-center">
+      <div className="min-h-screen bg-slate-900 flex flex-col justify-center items-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-        <p className="mt-4 text-gray-500 font-medium">Loading Tailor App...</p>
+        <p className="mt-4 text-slate-400 font-medium">Loading Tailor App...</p>
       </div>
     );
   }
 
   return (
-    <div className="w-full h-full min-h-screen relative bg-gray-100 dark:bg-gray-900 transition-colors duration-300">
+    <div className="w-full h-full min-h-screen relative bg-slate-900 transition-colors duration-300">
       <Routes>
         
         {/* ======================= */}

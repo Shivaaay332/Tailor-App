@@ -135,11 +135,11 @@ const AddMeasurement = () => {
   const currentFields = garmentFields[garmentType];
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20">
+    <div className="min-h-screen bg-slate-900 pb-20">
       
       {/* Header */}
-      <div className="bg-primary px-4 pt-6 pb-6 rounded-b-[2rem] shadow-sm relative text-center">
-        <Link to={`/customer/${customerId}`} className="absolute left-4 top-6 text-white p-1 bg-white/20 rounded-full active:bg-white/30">
+      <div className="bg-gradient-to-b from-primary to-indigo-700 px-4 pt-6 pb-6 rounded-b-[2rem] shadow-lg shadow-primary/20 relative text-center">
+        <Link to={`/customer/${customerId}`} className="absolute left-4 top-6 text-white p-2 bg-white/20 rounded-full">
           <ArrowLeft size={20} />
         </Link>
         <div className="bg-white/20 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2">
@@ -151,24 +151,24 @@ const AddMeasurement = () => {
       <div className="px-4 mt-6">
         <form onSubmit={handleSubmit} className="space-y-4">
           
-          <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
+          <div className="bg-slate-800 p-4 rounded-2xl border border-slate-700">
             <div className="flex justify-between items-end mb-2">
-              <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider ml-1">
+              <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider ml-1">
                 Kiska Naap Lena Hai?
               </label>
               {!isEditMode && (
-                <button type="button" onClick={handleDuplicate} className="text-[10px] flex items-center gap-1 bg-blue-50 text-blue-600 px-2 py-1 rounded-lg font-bold active:bg-blue-100">
+                <button type="button" onClick={handleDuplicate} className="text-[10px] flex items-center gap-1 bg-blue-500/20 text-blue-400 px-2 py-1 rounded-lg font-bold">
                   <Copy w={12} h={12}/> Pichla Copy Karein
                 </button>
               )}
             </div>
             <div className="relative">
-              <Scissors className="absolute left-4 top-3.5 w-5 h-5 text-gray-400" />
+              <Scissors className="absolute left-4 top-3.5 w-5 h-5 text-slate-500" />
               <select 
                 value={garmentType} 
                 onChange={(e) => setGarmentType(e.target.value)}
                 disabled={isEditMode} // Edit karte waqt kapda change na karein
-                className="w-full pl-12 pr-4 py-3 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-primary text-sm font-bold text-gray-800 border-none appearance-none disabled:opacity-60"
+                className="w-full pl-12 pr-4 py-3 bg-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-primary text-sm font-bold text-white border border-slate-600 appearance-none disabled:opacity-60"
               >
                 <option value="SHIRT">Shirt</option>
                 <option value="PANT">Pant</option>
@@ -179,14 +179,14 @@ const AddMeasurement = () => {
             </div>
           </div>
 
-          <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
-            <h3 className="font-bold text-gray-800 mb-4 border-b border-gray-50 pb-2">Naap Darj Karein (Inches me)</h3>
+          <div className="bg-slate-800 p-4 rounded-2xl border border-slate-700">
+            <h3 className="font-bold text-white mb-4 border-b border-slate-700 pb-2">Naap Darj Karein (Inches me)</h3>
             
             {garmentType !== 'CUSTOM' ? (
               <div className="grid grid-cols-2 gap-4">
                 {currentFields.map((field, index) => (
                   <div key={index}>
-                    <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider ml-1 block mb-1">
+                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider ml-1 block mb-1">
                       {field}
                     </label>
                     <input 
@@ -194,7 +194,7 @@ const AddMeasurement = () => {
                       step="0.25" 
                       value={measurementData[field] || ''} 
                       onChange={(e) => handleInputChange(field, e.target.value)}
-                      className="w-full px-3 py-2.5 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-primary text-sm font-semibold text-gray-800 border-none text-center" 
+                      className="w-full px-3 py-2.5 bg-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-primary text-sm font-semibold text-white text-center border border-slate-600" 
                       placeholder="0.0"
                     />
                   </div>
@@ -210,7 +210,7 @@ const AddMeasurement = () => {
                       placeholder="Naap ka Naam (eg: Hat Size)" 
                       value={item.key}
                       onChange={(e) => handleCustomChange(index, 'key', e.target.value)}
-                      className="w-1/2 px-3 py-2.5 bg-gray-50 rounded-xl text-sm font-semibold border-none outline-none focus:ring-2 focus:ring-primary"
+                      className="w-1/2 px-3 py-2.5 bg-slate-700 rounded-xl text-sm font-semibold border border-slate-600 outline-none focus:ring-2 focus:ring-primary text-white placeholder-slate-500"
                     />
                     <input 
                       type="number" 
@@ -218,14 +218,14 @@ const AddMeasurement = () => {
                       placeholder="0.0" 
                       value={item.value}
                       onChange={(e) => handleCustomChange(index, 'value', e.target.value)}
-                      className="w-1/3 px-3 py-2.5 bg-gray-50 rounded-xl text-sm font-semibold border-none outline-none focus:ring-2 focus:ring-primary text-center"
+                      className="w-1/3 px-3 py-2.5 bg-slate-700 rounded-xl text-sm font-semibold border border-slate-600 outline-none focus:ring-2 focus:ring-primary text-center text-white"
                     />
-                    <button type="button" onClick={() => removeCustomField(index)} className="p-2 text-red-400 active:bg-red-50 rounded-lg">
+                    <button type="button" onClick={() => removeCustomField(index)} className="p-2 text-red-400 rounded-lg">
                       <Trash2 w={18} h={18} />
                     </button>
                   </div>
                 ))}
-                <button type="button" onClick={addCustomField} className="w-full mt-2 flex items-center justify-center gap-1 bg-gray-50 text-gray-600 py-2 rounded-xl text-xs font-bold active:bg-gray-100">
+                <button type="button" onClick={addCustomField} className="w-full mt-2 flex items-center justify-center gap-1 bg-slate-700 text-slate-300 py-2 rounded-xl text-xs font-bold">
                   <Plus w={14} h={14} /> Naya Field Jodein
                 </button>
               </div>
@@ -235,7 +235,7 @@ const AddMeasurement = () => {
           <button 
             type="submit" 
             disabled={mutation.isPending}
-            className="w-full bg-primary text-white font-bold py-4 rounded-xl shadow-lg active:scale-95 transition-all mt-4"
+            className="w-full bg-primary text-white font-bold py-4 rounded-xl shadow-lg mt-4"
           >
             {mutation.isPending ? 'Save ho raha hai...' : 'Naap Save Karein'}
           </button>

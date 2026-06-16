@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import { IndianRupee, Search, ChevronRight, AlertCircle, CheckCircle2, MessageCircle } from 'lucide-react';
+import { IndianRupee, Search, AlertCircle, CheckCircle2, MessageCircle } from 'lucide-react';
 import apiClient from '../api/apiClient';
 import { sendPaymentReminder } from '../utils/whatsappHelper';
 
@@ -25,16 +25,16 @@ const Payments = () => {
   const orders = response?.data || [];
 
   const processedOrders = orders.map(order => {
-    const totalBill = order.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    const totalPaid = order.payments?.reduce((sum, pay) => sum + pay.installmentAmount, 0) || 0;
+    const totalBill = order.items?.reduce((sum, item) => sum + ((item.price || 0) * (item.quantity || 0)), 0) || 0;
+    const totalPaid = order.payments?.reduce((sum, pay) => sum + (pay.installmentAmount || 0), 0) || 0;
     const pendingAmount = totalBill - totalPaid;
 
     return { ...order, totalBill, totalPaid, pendingAmount };
   });
 
   let filteredOrders = processedOrders.filter(order => {
-    const matchesSearch = order.customer.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                          order.orderNumber.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = order.customer?.name?.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                          order.orderNumber?.toLowerCase().includes(searchTerm.toLowerCase());
     if (!matchesSearch) return false;
     if (activeTab === 'PENDING') return order.pendingAmount > 0;
     return order.pendingAmount <= 0;
@@ -43,47 +43,47 @@ const Payments = () => {
   const totalMarketUdhaari = processedOrders.reduce((sum, order) => sum + (order.pendingAmount > 0 ? order.pendingAmount : 0), 0);
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20">
+    <div className="min-h-screen bg-slate-900 pb-20">
       
-      <div className="bg-primary px-4 pt-8 pb-6 rounded-b-[2rem] shadow-sm">
+      <div className="bg-gradient-to-b from-primary to-indigo-700 px-4 pt-8 pb-8 rounded-b-[2rem] shadow-lg shadow-primary/20">
         <h1 className="text-2xl font-bold text-white mb-4">Hisaab - Kitab</h1>
         
-        <div className="bg-white/20 backdrop-blur-md rounded-2xl p-4 border border-white/30 text-white flex items-center justify-between">
+        <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20 text-white flex items-center justify-between">
           <div>
             <p className="text-white/80 text-xs font-bold uppercase tracking-wider mb-1">Bazar me udhaari</p>
             <h2 className="text-3xl font-extrabold flex items-center">
               ₹{totalMarketUdhaari}
             </h2>
           </div>
-          <div className="bg-white p-3 rounded-full">
-            <IndianRupee className="text-primary w-6 h-6" />
+          <div className="bg-white/20 p-3 rounded-full">
+            <IndianRupee className="text-white w-6 h-6" />
           </div>
         </div>
       </div>
 
       <div className="px-4 mt-4">
         
-        <div className="relative mb-4 shadow-sm">
-          <Search className="absolute left-4 top-3.5 w-5 h-5 text-gray-400" />
+        <div className="relative mb-4">
+          <Search className="absolute left-4 top-3.5 w-5 h-5 text-slate-400" />
           <input 
             type="text" 
             placeholder="Grahak ka naam ya Bill No. dhundein..." 
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-12 pr-4 py-3.5 bg-white border-none rounded-xl text-sm outline-none focus:ring-2 focus:ring-primary text-gray-700"
+            className="w-full pl-12 pr-4 py-3.5 bg-slate-800 rounded-xl text-sm outline-none focus:ring-2 focus:ring-primary text-white placeholder-slate-400 border border-slate-700"
           />
         </div>
 
-        <div className="flex bg-gray-200/50 p-1 rounded-xl mb-4">
+        <div className="flex bg-slate-800 p-1 rounded-xl mb-4">
           <button 
             onClick={() => setActiveTab('PENDING')}
-            className={`flex-1 py-2 text-sm font-bold rounded-lg transition-colors ${activeTab === 'PENDING' ? 'bg-white text-red-500 shadow-sm' : 'text-gray-500'}`}
+            className={`flex-1 py-2 text-sm font-bold rounded-lg transition-colors ${activeTab === 'PENDING' ? 'bg-slate-700 text-red-400 shadow-sm' : 'text-slate-400'}`}
           >
             Baki Paise (Udhaari)
           </button>
           <button 
             onClick={() => setActiveTab('CLEARED')}
-            className={`flex-1 py-2 text-sm font-bold rounded-lg transition-colors ${activeTab === 'CLEARED' ? 'bg-white text-green-500 shadow-sm' : 'text-gray-500'}`}
+            className={`flex-1 py-2 text-sm font-bold rounded-lg transition-colors ${activeTab === 'CLEARED' ? 'bg-slate-700 text-green-400 shadow-sm' : 'text-slate-400'}`}
           >
             Chukta (Cleared)
           </button>
@@ -92,15 +92,15 @@ const Payments = () => {
         <div className="space-y-3">
           {filteredOrders.length > 0 ? (
             filteredOrders.map(order => (
-              <div key={order.id} className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between active:scale-[0.98] transition-transform">
+              <div key={order.id} className="bg-slate-800 p-4 rounded-2xl border border-slate-700 flex items-center justify-between">
                 <div>
-                  <h3 className="font-bold text-gray-800 text-sm">{order.customer.name}</h3>
-                  <p className="text-xs text-gray-500 font-medium mb-2">{order.orderNumber}</p>
+                  <h3 className="font-bold text-white text-sm">{order.customer?.name || 'Customer'}</h3>
+                  <p className="text-xs text-slate-400 font-medium mb-2">{order.orderNumber}</p>
                   <div className="flex items-center gap-2">
-                    <span className="text-[10px] bg-gray-100 text-gray-600 px-2 py-1 rounded-md font-bold">
+                    <span className="text-[10px] bg-slate-700 text-slate-300 px-2 py-1 rounded-md font-bold">
                       Bill: ₹{order.totalBill}
                     </span>
-                    <span className="text-[10px] bg-green-50 text-green-600 px-2 py-1 rounded-md font-bold">
+                    <span className="text-[10px] bg-green-500/20 text-green-400 px-2 py-1 rounded-md font-bold">
                       Jama: ₹{order.totalPaid}
                     </span>
                   </div>
@@ -109,7 +109,7 @@ const Payments = () => {
                 <div className="flex flex-col items-end">
                   {order.pendingAmount > 0 ? (
                     <>
-                      <div className="flex items-center gap-1 text-red-500 bg-red-50 px-2 py-1.5 rounded-lg mb-2">
+                      <div className="flex items-center gap-1 text-red-400 bg-red-500/20 px-2 py-1.5 rounded-lg mb-2">
                         <AlertCircle w={14} h={14} />
                         <span className="font-extrabold text-sm">Baki: ₹{order.pendingAmount}</span>
                       </div>
@@ -117,21 +117,21 @@ const Payments = () => {
                         {/* WhatsApp Payment Reminder Button */}
                         <button 
                           onClick={() => sendPaymentReminder(order)}
-                          className="text-xs bg-green-500 text-white p-2 rounded-lg active:scale-95 shadow-sm"
+                          className="text-xs bg-green-500 text-white p-2 rounded-lg shadow-sm"
                         >
                           <MessageCircle w={14} h={14} />
                         </button>
 
                         <button 
                           onClick={() => navigate(`/add-payment/${order.id}`)}
-                          className="text-xs bg-primary text-white font-bold px-3 py-1.5 rounded-lg active:scale-95"
+                          className="text-xs bg-primary text-white font-bold px-3 py-1.5 rounded-lg"
                         >
                           Jama Karein
                         </button>
                       </div>
                     </>
                   ) : (
-                    <div className="flex items-center gap-1 text-green-500 bg-green-50 px-2 py-1.5 rounded-lg mb-1">
+                    <div className="flex items-center gap-1 text-green-400 bg-green-500/20 px-2 py-1.5 rounded-lg mb-1">
                       <CheckCircle2 w={14} h={14} />
                       <span className="font-extrabold text-sm">Cleared</span>
                     </div>
@@ -140,9 +140,9 @@ const Payments = () => {
               </div>
             ))
           ) : (
-            <div className="text-center py-10 bg-white rounded-2xl border border-gray-100 border-dashed">
-              <IndianRupee className="w-10 h-10 text-gray-300 mx-auto mb-2" />
-              <p className="text-gray-500 text-sm font-medium">Koi record nahi mila.</p>
+            <div className="text-center py-10 bg-slate-800 rounded-2xl border border-slate-700 border-dashed">
+              <IndianRupee className="w-10 h-10 text-slate-600 mx-auto mb-2" />
+              <p className="text-slate-400 text-sm font-medium">Koi record nahi mila.</p>
             </div>
           )}
         </div>
