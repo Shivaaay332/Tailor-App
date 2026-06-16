@@ -22,7 +22,7 @@ const AddCustomer = () => {
       return res.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(['customersList']);
+      queryClient.invalidateQueries(['customers']);
       queryClient.invalidateQueries(['dashboardSummary']);
       alert("🎉 Grahak successfully add ho gaya!");
       navigate('/customers'); // Save hone ke baad customers list par bhejo
@@ -47,11 +47,11 @@ const AddCustomer = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20">
+    <div className="min-h-screen bg-slate-900 pb-20">
       
       {/* Header */}
-      <div className="bg-primary px-4 pt-6 pb-6 rounded-b-[2rem] shadow-sm relative text-center">
-        <Link to="/customers" className="absolute left-4 top-6 text-white p-1 bg-white/20 rounded-full active:bg-white/30 transition-colors">
+      <div className="bg-gradient-to-b from-primary to-indigo-700 px-4 pt-6 pb-6 rounded-b-[2rem] shadow-lg shadow-primary/20 relative text-center">
+        <Link to="/customers" className="absolute left-4 top-6 text-white p-2 bg-white/20 rounded-full">
           <ArrowLeft size={20} />
         </Link>
         <div className="bg-white/20 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2">
@@ -65,12 +65,12 @@ const AddCustomer = () => {
         <form onSubmit={handleSubmit} className="space-y-4">
           
           {/* Form Fields */}
-          <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 space-y-4">
+          <div className="bg-slate-800 p-4 rounded-2xl border border-slate-700 space-y-4">
             
             <div>
-              <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider ml-1">Poora Naam *</label>
+              <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider ml-1">Poora Naam *</label>
               <div className="relative mt-1">
-                <User className="absolute left-4 top-3.5 w-4 h-4 text-gray-400" />
+                <User className="absolute left-4 top-3.5 w-4 h-4 text-slate-500" />
                 <input 
                   type="text" 
                   name="name" 
@@ -78,15 +78,15 @@ const AddCustomer = () => {
                   placeholder="Jaise: Rahul Sharma" 
                   value={formData.name} 
                   onChange={handleChange}
-                  className="w-full pl-11 pr-4 py-3 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-primary text-sm font-semibold text-gray-800 border-none" 
+                  className="w-full pl-11 pr-4 py-3 bg-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-primary text-sm font-semibold text-white placeholder-slate-500 border border-slate-600" 
                 />
               </div>
             </div>
 
             <div>
-              <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider ml-1">Mobile Number *</label>
+              <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider ml-1">Mobile Number *</label>
               <div className="relative mt-1">
-                <Phone className="absolute left-4 top-3.5 w-4 h-4 text-gray-400" />
+                <Phone className="absolute left-4 top-3.5 w-4 h-4 text-slate-500" />
                 <input 
                   type="tel" 
                   name="mobile" 
@@ -95,37 +95,37 @@ const AddCustomer = () => {
                   placeholder="10 digit number" 
                   value={formData.mobile} 
                   onChange={handleChange}
-                  className="w-full pl-11 pr-4 py-3 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-primary text-sm font-semibold text-gray-800 border-none" 
+                  className="w-full pl-11 pr-4 py-3 bg-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-primary text-sm font-semibold text-white placeholder-slate-500 border border-slate-600" 
                 />
               </div>
             </div>
 
             <div>
-              <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider ml-1">Pata (Address)</label>
+              <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider ml-1">Pata (Address)</label>
               <div className="relative mt-1">
-                <MapPin className="absolute left-4 top-3.5 w-4 h-4 text-gray-400" />
+                <MapPin className="absolute left-4 top-3.5 w-4 h-4 text-slate-500" />
                 <input 
                   type="text" 
                   name="address" 
                   placeholder="Jaise: MG Road, Indore" 
                   value={formData.address} 
                   onChange={handleChange}
-                  className="w-full pl-11 pr-4 py-3 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-primary text-sm font-medium text-gray-800 border-none" 
+                  className="w-full pl-11 pr-4 py-3 bg-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-primary text-sm font-medium text-white placeholder-slate-500 border border-slate-600" 
                 />
               </div>
             </div>
 
             <div>
-              <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider ml-1">Grahak Ke Baare Me Notes</label>
+              <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider ml-1">Grahak Ke Baare Me Notes</label>
               <div className="relative mt-1">
-                <FileText className="absolute left-4 top-3.5 w-4 h-4 text-gray-400" />
+                <FileText className="absolute left-4 top-3.5 w-4 h-4 text-slate-500" />
                 <input 
                   type="text" 
                   name="notes" 
                   placeholder="Jaise: VIP Customer hai..." 
                   value={formData.notes} 
                   onChange={handleChange}
-                  className="w-full pl-11 pr-4 py-3 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-primary text-sm font-medium text-gray-800 border-none" 
+                  className="w-full pl-11 pr-4 py-3 bg-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-primary text-sm font-medium text-white placeholder-slate-500 border border-slate-600" 
                 />
               </div>
             </div>
@@ -135,7 +135,7 @@ const AddCustomer = () => {
           <button 
             type="submit" 
             disabled={mutation.isPending}
-            className="w-full bg-primary text-white font-bold py-4 rounded-xl shadow-lg active:scale-95 transition-all mt-4"
+            className="w-full bg-primary text-white font-bold py-4 rounded-xl shadow-lg mt-4"
           >
             {mutation.isPending ? 'Save ho raha hai...' : 'Grahak Save Karein'}
           </button>
