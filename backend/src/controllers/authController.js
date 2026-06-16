@@ -95,8 +95,29 @@ const logout = (req, res) => {
   res.status(200).json({ success: true, message: "Successfully logged out" });
 };
 
-const refresh = (req, res) => {
-  // ... (refresh code same as before)
+const refresh = async (req, res) => {
+  try {
+    const refreshToken = req.cookies?.refreshToken;
+    if (!refreshToken) {
+      return res.status(401).json({ success: false, message: "Refresh token not found" });
+    }
+    
+    const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET || 'tailor_refresh_secret');
+    const user = await prisma.user.findUnique({ where: { id: decoded.id }, include: { shop: true } });
+    
+    if (!user) {
+      return res.status(401).json({ success: false, message: "User not found" });
+    }
+    
+    const { accessToken, refreshToken: newRefreshToken } = generateTokens(user.id);
+    res.cookie('jwt', accessToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
+    res.cookie('refreshToken', newRefreshToken, { httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 1000 });
+    
+    const userData = { id: user.id, name: user.name, email: user.email, role: user.role, profileImage: user.profileImage, shop: user.shop };
+    res.status(200).json({ success: true, user: userData, accessToken });
+  } catch (error) {
+    res.status(401).json({ success: false, message: "Invalid refresh token" });
+  }
 };
 
 module.exports = { register, login, logout, refresh };
