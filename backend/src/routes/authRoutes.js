@@ -1,12 +1,10 @@
 const express = require('express');
 const upload = require('../middlewares/uploadMiddleware');
 const { 
-  registerOwner, 
+  register, 
   login, 
-  refreshTokenLogic, 
   logout,
-  forgotPassword,
-  resetPassword
+  refresh
 } = require('../controllers/authController');
 
 const router = express.Router();
@@ -15,14 +13,10 @@ const router = express.Router();
 router.post('/register', upload.fields([
   { name: 'profileImage', maxCount: 1 },
   { name: 'shopLogo', maxCount: 1 }
-]), registerOwner);
+]), register);
 
 router.post('/login', login);
-router.post('/refresh', refreshTokenLogic);
+router.post('/refresh', refresh);
 router.post('/logout', logout);
-
-// Password Reset Routes
-router.post('/forgot-password', forgotPassword);
-router.put('/reset-password/:token', resetPassword);
 
 module.exports = router;
